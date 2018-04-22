@@ -28,7 +28,7 @@
         <div style="width: 100%; ">
             <h1 style="text-align: center; color: #ecf0f1;margin-top: 5%;">BRICKBUSTER</h1>
             <div style="margin-left: 38%; margin-right: 38%; margin-top: 6%;width:auto;">
-                <form action="ServletLogin">
+                <form action="ServletLogin" method="POST">
                 <div class="login-form">
                     <div class="form-group">
                         <input type="text" class="form-control login-field" value="" placeholder="Enter your name" id="login-name" />
@@ -40,7 +40,7 @@
                         <label class="login-field-icon fui-lock" for="login-pass"></label>
                     </div>
 
-                  <a class="btn btn-primary btn-lg btn-block" href="#">Log in</a>
+                    <input type="submit" class="btn btn-primary btn-lg btn-block" name="Login" value="Login">
                     <a class="login-link" href="#">Lost your password?</a>
                 </div>
                     </form>
