@@ -3,24 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
+package accionesClientes;
 
+import accionesJuegos.*;
+import interfaces.IPersistencia;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import objetosNegocio.ArticuloED;
+import objetosNegocio.Cliente;
+import objetosNegocio.Videojuego;
+import objetosTransferencia.Lista;
 import persistencia.PersistenciaBD;
 
 /**
  *
  * @author user
  */
-@WebServlet(name = "ServletLogin", urlPatterns = {"/ServletLogin"})
-public class ServletLogin extends HttpServlet {
+@WebServlet(name = "ObtenClientes", urlPatterns = {"/ObtenClientes"})
+public class ObtenClientes extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,18 +43,51 @@ public class ServletLogin extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ServletLogin</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ServletLogin at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        RequestDispatcher rd;
+        String siguiente = null;
+
+        // En este bean de tipo Lista, se almacena la lista de
+        // canciones leídas de la tabla canciones de la base de datos musica
+        Lista listaClientes = new Lista();
+        List<Cliente> lista;
+// Obten la tarea seleccionada del atributo tareaSel de la
+        // variable session que es la que contiene a todas las variables con
+        // ámbito de sesion
+        HttpSession session = request.getSession();
+
+        // Obten la tarea seleccionada en index.jsp
+        String accionSel = (String) session.getAttribute("accionSel");
+
+        // Crea el objeto para acceder a la base de datos
+        IPersistencia fachada = new PersistenciaBD();
+
+        if (accionSel.equals("listarId")) {
+            lista = new ArrayList();
+            lista.add(fachada.obten(new Cliente((String) session.getAttribute("numero"))));
+            // Almacena el título de la tabla de canciones en el bean
+            listaClientes.setTituloTabla("Cliente: " + lista.get(0).getNumCredencial());
+        } else {
+            // Obtiene el vector con la lista de juegos
+            lista = fachada.consultarClientes();
+            listaClientes.setTituloTabla("Lista de clientes");
+
         }
+
+        // Almacena la lista de juegos en el bean listaCanciones
+        listaClientes.setLista(lista);
+
+        request.setAttribute("listaClientes", listaClientes);
+
+        if (accionSel.equals("actualizarCancion")) {
+            //  siguiente = "seleccionaCancionActualizar.jsp";
+        } else if (accionSel.equals("eliminarCanciones")) {
+            // siguiente = "seleccionaCancionesEliminar.jsp";
+        } else {
+            siguiente = "despliegaClientes.jsp";
+        }
+
+        rd = request.getRequestDispatcher(siguiente);
+        rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -61,9 +103,6 @@ public class ServletLogin extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        out.println("LEl");
     }
 
     /**
@@ -77,24 +116,7 @@ public class ServletLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String usuario = request.getParameter("user");
-        String pswd = request.getParameter("password");
-        PrintWriter out = response.getWriter();
-
-        try {
-            if (usuario != null) {
-                if (usuario.equals("nacho")&& pswd.equals("123")) {
-                    HttpSession sesion=request.getSession();
-                    sesion.setAttribute("user", usuario);
-                    response.sendRedirect("index.jsp");
-                }else if (usuario.equals("gaby")&& pswd.equals("123")) {
-                    response.sendRedirect("index.jsp");
-                }
-            }
-        } catch (Exception e) {
-        }
-
+        processRequest(request, response);
     }
 
     /**

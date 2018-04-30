@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page session="true"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,8 +16,10 @@
         <!-- Loading Flat UI -->
         <link href="dist/css/flat-ui.css" rel="stylesheet">
         <link href="docs/assets/css/demo.css" rel="stylesheet">
+        
     </head>
     <body style="background-color: #1abc9c">
+       
         <!--
         <form method="post" action="login">
         Email ID:<input type="text" name="email" /><br/>
@@ -24,26 +27,26 @@
         <input type="submit" value="login" />
         </form>
         -->
-
+        
         <div style="width: 100%; ">
             <h1 style="text-align: center; color: #ecf0f1;margin-top: 5%;">BRICKBUSTER</h1>
             <div style="margin-left: 38%; margin-right: 38%; margin-top: 6%;width:auto;">
                 <form action="ServletLogin" method="POST">
-                <div class="login-form">
-                    <div class="form-group">
-                        <input type="text" class="form-control login-field" value="" placeholder="Enter your name" id="login-name" />
-                        <label class="login-field-icon fui-user" for="login-name"></label>
-                    </div>
+                    <div class="login-form">
+                        <div class="form-group">
+                            <input type="text" class="form-control login-field" value="" placeholder="Enter your name" id="login-name" name="user" />
+                            <label class="login-field-icon fui-user" for="login-name"></label>
+                        </div>
 
-                    <div class="form-group">
-                        <input type="password" class="form-control login-field" value="" placeholder="Password" id="login-pass" />
-                        <label class="login-field-icon fui-lock" for="login-pass"></label>
-                    </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control login-field" value="" placeholder="Password" id="login-pass"  name="password"/>
+                            <label class="login-field-icon fui-lock" for="login-pass"></label>
+                        </div>
 
-                    <input type="submit" class="btn btn-primary btn-lg btn-block" name="Login" value="Login">
-                    <a class="login-link" href="#">Lost your password?</a>
-                </div>
-                    </form>
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" name="Login" value="Login">
+                        <a class="login-link" href="#">Lost your password?</a>
+                    </div>
+                </form>
             </div>
         </div>
 
