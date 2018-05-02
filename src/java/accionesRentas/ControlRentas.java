@@ -3,28 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package accionesClientes;
+package accionesRentas;
 
-import accionesJuegos.*;
-import interfaces.IPersistencia;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import objetosNegocio.Cliente;
-import persistencia.PersistenciaBD;
 
 /**
  *
  * @author user
  */
-@WebServlet(name = "AgregaCliente", urlPatterns = {"/AgregaCliente"})
-public class AgregaCliente extends HttpServlet {
+@WebServlet(name = "ControlRentas", urlPatterns = {"/ControlRentas"})
+public class ControlRentas extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,28 +33,57 @@ public class AgregaCliente extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("index.jsp");
-        Cliente cliente = new Cliente();
 
-        // Obten la tarea seleccionada del atributo tareaSel de la
+        String accionSel = request.getParameter("accion");
+        String numero = request.getParameter("numero");
+        String siguiente = null;
+
+        // Guarda la tarea seleccionada como el atributo tareaSel en la
         // variable session que es la que contiene a todas las variables con
         // ámbito de sesion
         HttpSession session = request.getSession();
+        session.setAttribute("accionSel", accionSel);
+        session.setAttribute("numero", numero);
 
-        cliente.setNumCredencial((String) request.getParameter("numC"));
-        cliente.setNombre((String) request.getParameter("nombre"));
-        cliente.setDireccion((String) request.getParameter("direccion"));
-        cliente.setTelefono((String) request.getParameter("telefono"));
+        // establece la pagina JSP o servlet que inicia
+        // el caso de uso seleccionado
+        switch (accionSel) {
 
-        // Crea el objeto para acceder a la base de datos
-        IPersistencia fachada = new PersistenciaBD();
+            case "rentar1":
+                siguiente = "Rentar";
+                session.setAttribute("accionSel", "consultarCliente");
+                break;
+            case "rentar2":
+                siguiente = "Rentar";
+                session.setAttribute("accionSel", "rentar");
+                break;
+            case "devolverRenta1":
+                siguiente = "DevolverRenta";
+                session.setAttribute("accionSel", "consultarCliente");
+                break;
+            case "devolverRenta2":
+                siguiente = "DevolverRenta";
+                session.setAttribute("accionSel", "devolver");
+                break;
+            case "consultarRenta":
+                siguiente = "EliminarCliente";
+                break;
+            case "consultarRentaCliente":
+                siguiente = "ObtenClientes";
+                break;
+            case "consultarRentaPeriodo":
+                session.setAttribute("accionSel", "listarId");
+                siguiente = "ObtenClientes";
+                break;
+            case "listarCancionesPeriodo":
+                siguiente = "capturaPeriodo.jsp";
+                break;
+            default:
+                break;
+        }
 
-        fachada.agregar(cliente);
-        session.setAttribute("accionSel", "listarClientes");
-
-        rd = request.getRequestDispatcher("ObtenClientes");
-        rd.forward(request, response);
+        // Redirecciona a la página JSP o servlet
+        request.getRequestDispatcher(siguiente).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

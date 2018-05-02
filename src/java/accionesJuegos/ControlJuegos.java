@@ -73,6 +73,10 @@ public class ControlJuegos extends HttpServlet {
                 session.setAttribute("accionSel", "eliminaInv");
                 siguiente = "ObtenJuegos";
                 break;
+            case "consultarArticulos":
+                session.setAttribute("accionSel","consInv");
+                siguiente = "ObtenJuegos";
+                break;
             default:
                 break;
         }

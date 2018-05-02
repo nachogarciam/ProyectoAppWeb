@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package accionesClientes;
+package accionesRentas;
 
-import accionesJuegos.*;
 import interfaces.IPersistencia;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,8 +22,8 @@ import persistencia.PersistenciaBD;
  *
  * @author user
  */
-@WebServlet(name = "AgregaCliente", urlPatterns = {"/AgregaCliente"})
-public class AgregaCliente extends HttpServlet {
+@WebServlet(name = "DevolverRenta", urlPatterns = {"/DevolverRenta"})
+public class DevolverRenta extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,28 +37,17 @@ public class AgregaCliente extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("index.jsp");
-        Cliente cliente = new Cliente();
-
+        Cliente cliente = null;
         // Obten la tarea seleccionada del atributo tareaSel de la
         // variable session que es la que contiene a todas las variables con
         // ámbito de sesion
         HttpSession session = request.getSession();
-
-        cliente.setNumCredencial((String) request.getParameter("numC"));
-        cliente.setNombre((String) request.getParameter("nombre"));
-        cliente.setDireccion((String) request.getParameter("direccion"));
-        cliente.setTelefono((String) request.getParameter("telefono"));
-
         // Crea el objeto para acceder a la base de datos
         IPersistencia fachada = new PersistenciaBD();
-
-        fachada.agregar(cliente);
-        session.setAttribute("accionSel", "listarClientes");
-
-        rd = request.getRequestDispatcher("ObtenClientes");
-        rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

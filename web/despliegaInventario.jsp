@@ -24,21 +24,18 @@
                     document.getElementById(id).checked = false;
                 } else {
                     document.getElementById(id).checked = true;
+
                 }
+
+
             }
         </script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <link href="newcss.css" rel="stylesheet" type="text/css"/>
+
     </head>
     <!--Cargar el navbar-->
     <%@include file="jspf/encabezado.jspf"%>
 
     <body>
-        <script src="jquey.js" type="text/javascript"></script>
-        <script>
-            $(".table2").remove();
-        </script>
-
         <%
             HttpSession sesion = request.getSession();
             String usuario = null;
@@ -47,7 +44,6 @@
                 response.sendRedirect("login.jsp");
             }
         %>
-
         <%-- Despliega los datos de todas los juegos. Los datos
              se encuentran en el bean listaJuegos guardados en
              el objeto request por los servlets obtenCanciones
@@ -56,17 +52,11 @@
         <div class="container" style="margin-top:9%;">
             <div class="jumbotron">
 
-                <table class="table2" id="table2">
-                    <div id="menu" class="menu">
-                        <ul>
-                            <li id="copiar">Copiar</li>
-                            <li id="mover">Mover</li>
-                            <li id="eliminar">Eliminar</li>
-                        </ul>
-                    </div>
+                <table class="table2" >
+
                     <%-- Título de la tabla --%>
                     <h3 style="text-align: center;">
-                        ${listaJuegos.tituloTabla}
+                        Inventario
                     </h3>
 
                     <tr>
@@ -74,38 +64,27 @@
                         <th style="border-top-left-radius: 10px; width: 1%; background-color: #34495e;">Selección</th>
                         <th>Num. Catálogo</th>
                         <th>Título</th>
-                        <th>Género</th>
-                        <th>Clasificación</th>
-                        <th>Consola</th>
-                        <th>Fabricante</th>
-                        <th>Versión</th>
-                        <th style=" border-top-right-radius: 10px; width: 1%">Existencias</th>
+                        <th>Existencias</th>
+                        <th style=" border-top-right-radius: 10px; width: 1%">Disponibilidad</th>
                     </tr>
                     <%!
                         int i = 0;
-                        int j = 0;
                     %>
                     <c:forEach items="${listaJuegos.lista}" var="juego"
                                varStatus="fila">
-                        <tr onclick="clickear(<%=i%>)" id='fila<%=j%>'>
-                            <td>
+                        <tr onclick="clickear(<%=i%>)">
+                            <td >
                                 <label class="checkbox checkbox-inline" for="checkbox5c">
                                     <input type="checkbox" data-toggle="checkbox" id="<%=i%>" class="custom-checkbox" value="${juego.articulo.numCatalogo}" name="<%=i%>"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
                                 </label>
                             </td>
                             <td>${juego.articulo.numCatalogo}</td>
                             <td>${juego.articulo.titulo}</td>
-                            <td>${juego.articulo.genero}</td>
-                            <td>${juego.articulo.clasificacion}</td>
-                            <td>${juego.articulo.consola}</td>
-                            <td>${juego.articulo.fabricante}</td>
-                            <td>${juego.articulo.version}</td>
-                            <%-- <td>${listaJuegos2[fila.index]}</td>--%>
                             <td>${juego.existencia}</td>
+                            <td>${juego.disponibilidad}</td>
                         </tr>
                         <%
                             i++;
-                            j++;
                         %>
                     </c:forEach>
                 </table>
@@ -115,7 +94,6 @@
         <script src="dist/js/vendor/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="dist/js/flat-ui.min.js"></script>
-
         <script>
                             juegos.style.color = "#1abc9c";
                             juegos1.style.borderTopColor = "#1abc9c";

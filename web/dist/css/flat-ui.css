@@ -6322,6 +6322,7 @@ footer p {
     background-color: #16a085; 
     color: #ecf0f1;
     opacity: .8;
+    
   }
   .table2 td p{
     font-size: 80%;
@@ -6332,7 +6333,6 @@ footer p {
     margin-right: auto;
     margin-left: auto;
     border-spacing: 0;
-    position: static;
   }
 
   .table3 th {

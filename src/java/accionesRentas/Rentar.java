@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package accionesClientes;
+package accionesRentas;
 
-import accionesJuegos.*;
 import interfaces.IPersistencia;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +17,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import objetosNegocio.Cliente;
+import objetosNegocio.Renta;
+import objetosNegocio.Videojuego;
+import objetosServicio.Fecha;
 import persistencia.PersistenciaBD;
 
 /**
  *
  * @author user
  */
-@WebServlet(name = "AgregaCliente", urlPatterns = {"/AgregaCliente"})
-public class AgregaCliente extends HttpServlet {
+@WebServlet(name = "Rentar", urlPatterns = {"/Rentar"})
+public class Rentar extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,28 +41,45 @@ public class AgregaCliente extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("index.jsp");
-        Cliente cliente = new Cliente();
+        Cliente cliente = null;
 
         // Obten la tarea seleccionada del atributo tareaSel de la
         // variable session que es la que contiene a todas las variables con
         // ámbito de sesion
         HttpSession session = request.getSession();
-
-        cliente.setNumCredencial((String) request.getParameter("numC"));
-        cliente.setNombre((String) request.getParameter("nombre"));
-        cliente.setDireccion((String) request.getParameter("direccion"));
-        cliente.setTelefono((String) request.getParameter("telefono"));
-
         // Crea el objeto para acceder a la base de datos
         IPersistencia fachada = new PersistenciaBD();
 
-        fachada.agregar(cliente);
-        session.setAttribute("accionSel", "listarClientes");
+        Fecha fecha = new Fecha();
 
-        rd = request.getRequestDispatcher("ObtenClientes");
-        rd.forward(request, response);
+        session.setAttribute("fecha", fecha);
+        if (session.getAttribute("accionSel").equals("consultarCliente")) {
+            try {
+                cliente = fachada.obten(new Cliente((String) session.getAttribute("numero")));
+                session.setAttribute("cliente", cliente);
+            } catch (NullPointerException e) {
+                try (PrintWriter out = response.getWriter()) {
+                    out.println("<script>alert('Error: Cliente no encontrado');</script>");
+                    out.println("<script>location.href='index.jsp';</script>");
+
+                }
+            }
+            rd = request.getRequestDispatcher("rentar.jsp");
+            rd.forward(request, response);
+        } else {
+            cliente = new Cliente((String) request.getParameter("numCred"));
+            Videojuego vj = new Videojuego((String) request.getParameter("numCat"));
+            String tiempo = request.getParameter("tiempo");
+            Renta r = new Renta(cliente, vj, fecha, Integer.parseInt(tiempo));
+            fachada.rentarVideojuego(r);
+            rd = request.getRequestDispatcher("index.jsp");
+            rd.forward(request, response);
+        }
+
+        //    rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

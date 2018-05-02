@@ -120,6 +120,9 @@ public class ObtenJuegos extends HttpServlet {
             } else {
                 siguiente = "despliegaJuegos.jsp";
             }
+            if(accionSel.equals("consInv")){
+                siguiente = "despliegaInventario.jsp";
+            }
         }
         rd = request.getRequestDispatcher(siguiente);
         rd.forward(request, response);
